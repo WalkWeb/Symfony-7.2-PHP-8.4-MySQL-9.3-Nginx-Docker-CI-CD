@@ -37,18 +37,18 @@ services:
       - app-network
 
   nginx:
-    build: ./docker/nginx
+    image: nginx:stable-alpine
     container_name: nginx
 #    restart: always
+    environment:
+      TZ: "Europe/Moscow"
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ./logs/nginx/:/var/log/nginx
       - ./:/app
-      - ./data/nginx:/etc/nginx/conf.d
-    depends_on:
-      - app
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/ssl/:/etc/nginx/ssl/
     links:
       - app
     networks:
@@ -68,10 +68,11 @@ services:
     networks:
       - app-network
 
+  # Container for local run codeception tests
   codeception:
     build: ./docker/php_codeception
     container_name: codeception
-  #    restart: always
+#    restart: always
     env_file:
       - .env
     depends_on:
