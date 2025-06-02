@@ -1,0 +1,90 @@
+# Created by WalkWeb, 2025
+
+services:
+
+  app:
+    build: ./docker/php
+    container_name: app
+#    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/app:cached
+      - ./docker/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+    links:
+      - mysql:mysql
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:9.3
+    container_name: db
+#    restart: always
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - app-network
+
+  nginx:
+    build: ./docker/nginx
+    container_name: nginx
+#    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./logs/nginx/:/var/log/nginx
+      - ./:/app
+      - ./data/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    links:
+      - app
+    networks:
+      - app-network
+
+  # This container automatically install and run migration at up containers
+  firststart:
+    container_name: firststart
+    build: ./docker/php
+    volumes:
+      - ./:/app
+    depends_on:
+      - mysql
+    working_dir: /app
+    command: >
+      sh -c "composer install && php bin/console doctrine:migrations:migrate --no-interaction"
+    networks:
+      - app-network
+
+  codeception:
+    build: ./docker/php_codeception
+    container_name: codeception
+  #    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/app:cached
+      - ./docker/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+    links:
+      - mysql:mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+    name: app-network

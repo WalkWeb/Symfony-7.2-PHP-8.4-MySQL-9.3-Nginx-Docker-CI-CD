@@ -1,0 +1,80 @@
+# Created by WalkWeb, 2025
+
+image: walkweb/php-8.4-mysql
+
+cache:
+  paths:
+    - vendor/
+
+services:
+  - mysql:9.3
+
+before_script:
+  - cp .env.example .env
+
+variables:
+  MYSQL_USER: admin
+  MYSQL_DATABASE: app_test
+  MYSQL_PASSWORD: password
+  MYSQL_ROOT_PASSWORD: password
+
+stages:
+  - build
+  - static analys
+  - tests
+  - deploy
+
+composer install:
+  stage: build
+  script:
+    - composer install
+
+migration:
+  stage: build
+  script:
+    - php bin/console --env=test doctrine:migrations:migrate --no-interaction
+    - php bin/console --env=test doctrine:schema:validate
+
+code style:
+  stage: static analys
+  script:
+    - PHP_CS_FIXER_IGNORE_ENV=1 php vendor/bin/php-cs-fixer check src
+
+phpstan:
+  stage: static analys
+  script:
+    - php vendor/bin/phpstan analyse src
+
+rector:
+  stage: static analys
+  script:
+    - php vendor/bin/rector
+
+unit tests:
+  stage: tests
+  script:
+    - php vendor/bin/codecept run Unit --env=test
+
+api tests:
+  stage: tests
+  script:
+    - php -S 0.0.0.0:8000 -t public > /dev/null 2>&1 &
+    - php vendor/bin/codecept run Api --env=test
+
+acceptance tests:
+  stage: tests
+  script:
+    - php -S 0.0.0.0:8000 -t public > /dev/null 2>&1 &
+    - php vendor/bin/codecept run Acceptance --env=test
+
+deploy prod:
+  stage: deploy
+  image: kroniak/ssh-client
+  only:
+    - main
+  script:
+    - mkdir ~/.ssh/
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa $SERVER_HOST >> ~/.ssh/known_hosts
+    - ssh $SERVER_USER@$SERVER_HOST "cd /var/www/app/ && git pull origin main && docker exec -d app composer install && docker exec -d app php bin/console doctrine:migrations:migrate --no-interaction"
