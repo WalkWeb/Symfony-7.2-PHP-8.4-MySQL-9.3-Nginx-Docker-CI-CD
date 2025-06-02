@@ -46,6 +46,7 @@ Requirements:
     unauthorized access connect GitLab in your server)
     - $SERVER_USER - user on your server
     - $SERVER_HOST - IP your server
+    - $APP_DIR - application directory in your server
 
 5. Make changes to the main branch and check CI/CD (Project -> Build -> Pipelines):
 
