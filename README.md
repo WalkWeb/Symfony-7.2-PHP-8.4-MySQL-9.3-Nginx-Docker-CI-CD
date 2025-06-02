@@ -40,14 +40,13 @@ Requirements:
 
 1. Create new project repository
 2. Change git remote origin repository to your GitLab project repository
-3. Set up unauthorized access git pull (add `id_rsa.pub` in Account -> Preferences -> SSH Keys)
+3. Set up unauthorized access git pull (add server `id_rsa.pub` in Account -> Preferences -> SSH Keys)
 4. Set CI/CD variables (Settings -> CI/CD -> Variables):
-    - $SSH_PRIVATE_KEY - Private key `id_rsa` (`id_rsa.pub` must set in `authorized_keys` in your server)
+    - $SSH_PRIVATE_KEY - Private key `id_rsa` (and `id_rsa.pub` must set in `authorized_keys` in your server for 
+    unauthorized access connect GitLab in your server)
     - $SERVER_USER - user on your server
     - $SERVER_HOST - IP your server
 
-5. Set up unauthorized access connect GitLab in your server (add server `id_rsa.pub` in Account -> Preferences -> SSH 
-Keys)
-6. Make changes to the main branch and check CI/CD (Project -> Build -> Pipelines):
+5. Make changes to the main branch and check CI/CD (Project -> Build -> Pipelines):
 
 ![alt_text](public/img/ci-cd.png)
