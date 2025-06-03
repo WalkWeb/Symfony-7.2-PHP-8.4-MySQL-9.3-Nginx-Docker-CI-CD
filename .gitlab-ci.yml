@@ -6,9 +6,6 @@ cache:
   paths:
     - vendor/
 
-services:
-  - mysql:9.3
-
 before_script:
   - cp .env.example .env
 
@@ -31,6 +28,8 @@ composer install:
 
 migration:
   stage: build
+  services:
+    - mysql:9.3
   script:
     - php bin/console --env=test doctrine:migrations:migrate --no-interaction
     - php bin/console --env=test doctrine:schema:validate
@@ -57,12 +56,16 @@ unit tests:
 
 api tests:
   stage: tests
+  services:
+    - mysql:9.3
   script:
     - php -S 0.0.0.0:8000 -t public > /dev/null 2>&1 &
     - php vendor/bin/codecept run Api --env=test
 
 acceptance tests:
   stage: tests
+  services:
+    - mysql:9.3
   script:
     - php -S 0.0.0.0:8000 -t public > /dev/null 2>&1 &
     - php vendor/bin/codecept run Acceptance --env=test
