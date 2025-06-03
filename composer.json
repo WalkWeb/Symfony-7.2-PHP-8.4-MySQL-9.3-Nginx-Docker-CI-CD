@@ -1,5 +1,5 @@
 {
-    "name": "walkweb/symfony-example-project",
+    "name": "walkweb/symfony-7.2-php-8.4-mysql-9.3-nginx-docker-ci-cd",
     "description": "Example Symfony Project",
     "type": "project",
     "license": "proprietary",

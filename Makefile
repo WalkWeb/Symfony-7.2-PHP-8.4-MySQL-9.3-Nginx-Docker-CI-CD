@@ -34,7 +34,7 @@ cs:
 stan:
 	@$(DOCKER_COMP) exec app php vendor/bin/phpstan analyse src
 
-stan:
+rector:
 	@$(DOCKER_COMP) exec app php vendor/bin/rector
 
 phpunit:
