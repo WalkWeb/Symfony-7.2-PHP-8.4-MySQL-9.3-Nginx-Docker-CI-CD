@@ -80,4 +80,4 @@ deploy prod:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 400 ~/.ssh/id_rsa
     - ssh-keyscan -t rsa $SERVER_HOST >> ~/.ssh/known_hosts
-    - ssh $SERVER_USER@$SERVER_HOST "cd /var/www/$APP_DIR/ && git pull origin main && docker exec -d app composer install && docker exec -d app php bin/console doctrine:migrations:migrate --no-interaction"
+    - ssh $SERVER_USER@$SERVER_HOST "cd /var/www/$APP_DIR/ && git pull origin main && docker exec -d app composer install --no-dev && docker exec -d app php bin/console doctrine:migrations:migrate --no-interaction"
