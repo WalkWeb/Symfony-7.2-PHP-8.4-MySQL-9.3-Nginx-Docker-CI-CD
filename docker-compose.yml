@@ -11,7 +11,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./:/app:cached
+      - ./:/app
       - ./docker/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
     links:
       - mysql:mysql
@@ -32,7 +32,7 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
     ports:
-      - 3306:3306
+      - "3306:3306"
     networks:
       - app-network
 
@@ -43,8 +43,8 @@ services:
     environment:
       TZ: "Europe/Moscow"
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
       - ./:/app
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
@@ -78,7 +78,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./:/app:cached
+      - ./:/app
       - ./docker/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
     links:
       - mysql:mysql
