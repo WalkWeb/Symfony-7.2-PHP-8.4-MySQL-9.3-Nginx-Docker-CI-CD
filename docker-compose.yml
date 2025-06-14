@@ -63,8 +63,9 @@ services:
     depends_on:
       - mysql
     working_dir: /app
+    # sleep 3s need for start mysql container
     command: >
-      sh -c "composer install && php bin/console doctrine:migrations:migrate --no-interaction"
+      sh -c "sleep 3s && composer install && php bin/console doctrine:migrations:migrate --no-interaction"
     networks:
       - app-network
 
