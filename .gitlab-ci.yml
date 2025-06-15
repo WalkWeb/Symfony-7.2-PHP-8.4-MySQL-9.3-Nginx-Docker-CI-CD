@@ -31,7 +31,6 @@ migration:
   services:
     - mysql:9.3
   script:
-    - php bin/console app:create-user
     - php bin/console --env=test doctrine:migrations:migrate --no-interaction
     - php bin/console --env=test doctrine:schema:validate
 
