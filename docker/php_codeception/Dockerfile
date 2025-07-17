@@ -44,6 +44,12 @@ RUN pecl install amqp \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
 
+# Install xDebug
+RUN  apk add --update linux-headers \
+    && pecl channel-update pecl.php.net \
+    && pecl install xdebug-3.4.0 \
+    && docker-php-ext-enable xdebug
+
 # Create and change workdir
 RUN mkdir /app
 WORKDIR /app
