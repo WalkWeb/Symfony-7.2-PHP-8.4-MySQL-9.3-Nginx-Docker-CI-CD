@@ -49,4 +49,4 @@ codeception:
 cc:
 	@$(DOCKER_COMP) exec app php bin/console c:c
 
-test: cs stan rector phpunit
+test: cs stan rector codeception

@@ -71,7 +71,8 @@ services:
     networks:
       - app-network
 
-  # Container for local run codeception tests
+  # Container for local run codeception acceptance tests
+  # May be removed if you don't have acceptance tests
   codeception:
     build: ./docker/php_codeception
     container_name: codeception
