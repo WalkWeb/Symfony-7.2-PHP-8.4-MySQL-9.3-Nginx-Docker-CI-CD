@@ -40,11 +40,16 @@ rector:
 phpunit:
 	@$(DOCKER_COMP) exec -e APP_ENV=test app vendor/bin/phpunit
 
-coverage:
+# See result coverage in var/phpunit/coverage directory
+phpunit-coverage:
 	@$(PHP) vendor/bin/phpunit --coverage-html var/phpunit/coverage
 
 codeception:
 	@$(DOCKER_COMP) exec -e APP_ENV=test codeception vendor/bin/codecept run
+
+# See result coverage in tests/_output/coverage directory
+coverage:
+	@$(DOCKER_COMP) exec -e APP_ENV=test codeception vendor/bin/codecept run Api --coverage --coverage-html
 
 cc:
 	@$(DOCKER_COMP) exec app php bin/console c:c
