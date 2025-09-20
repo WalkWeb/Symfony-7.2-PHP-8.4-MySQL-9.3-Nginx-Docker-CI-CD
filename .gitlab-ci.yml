@@ -1,5 +1,8 @@
 # Created by WalkWeb, 2025
 
+default:
+  interruptible: true
+
 image: walkweb/php-8.4-mysql
 
 cache:
